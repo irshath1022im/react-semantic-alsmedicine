@@ -12,7 +12,8 @@ export default class ItemsHome extends React.Component {
             loading:true,
             items:[],
             meta:{},
-            links:{}
+            links:{},
+            msg:'Sending Request'
         }
     }
 
@@ -43,11 +44,17 @@ getItems = async(url)=>{
             links:result.data.links
         })
     } catch (error) {
+       
 
-        this.setState({
-            loading: true,
-            items:[]
-        })
+       console.log(error.request)
+       if(error.request) {
+
+           this.setState({
+               loading: true,
+               items:[],
+               msg: 'Error!, Something Wrong with Request'
+           })
+       }
         
     }
 }
@@ -56,6 +63,7 @@ getItems = async(url)=>{
 updateSearchResult = (result)=>{
 
     // console.log(result)
+
     this.setState({
         loading: false,
         items: result.data,
@@ -65,7 +73,7 @@ updateSearchResult = (result)=>{
 
 
     render(){
-        const {loading,items,meta,links} = this.state
+        const {loading,items,meta,links,msg} = this.state
             return (
                 <Container>
                     <SearchItem  updateSearchResult = {this.updateSearchResult}/>
@@ -103,7 +111,7 @@ updateSearchResult = (result)=>{
                             </div>
                         :
                         <Message info>
-                            <Message.Header>Requesting....</Message.Header>
+                            <Message.Header>{msg}</Message.Header>
                         </Message>
                     
                     }
