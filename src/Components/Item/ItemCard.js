@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom';
 import {  Button, Card,  Image, Label} from 'semantic-ui-react';
+import CreateConsumption from '../Consumption/CreateConsumption';
 import ItemLogsModal from './ItemLogsModa';
 
 
 function ItemCard(props) {
     const {item_name,erp_code,stocks} = props.item
+
+    const [modalOpen, setModalOpen] = useState(true)
+
 
     return (
         <Card centered>
@@ -31,6 +35,7 @@ function ItemCard(props) {
 
                                              
                                                     <Button size="small" color="teal" onClick={ ()=> props.history.push('/consumption/create', {...stock})}>-</Button>
+
                                                 
                                             </Label>
                                         </div>
