@@ -7,9 +7,10 @@ import { Button, Container, Form, Input, Label, Message, Modal } from 'semantic-
 export default function CreateConsumption(props) {
 
     const [consumptionDate, setConsumptionDate] = useState()
-    const [selectedLocation, setSelectedLocation] = useState()
+    const [selectedLocation, setSelectedLocation] = useState('')
     const [qty, setQty] = useState('')
     const [locations, setLocations] = useState([])
+    const [locationError, setLocationError] = useState('')
     const [isFormLoading, setFormLoading] = useState(false)
     const [formError, setFormError] = useState('')
     const [formSuccess, setFormSuccess] = useState('')
@@ -61,8 +62,12 @@ const formHandle = (e,data)=>{
     if( !qty ||qty > inStock || qty <= 0){
        setQtyError('Qty is more then available stock!')
        setFormLoading(false)
-    } else {
+    } else if(!selectedLocation || selectedLocation == 0 ) {
+        setLocationError('Location is required!')
+        setFormLoading(false)
+    }else {
         setQtyError('')
+        setLocationError('')
         setFormLoading(true)
 
             let data = {
@@ -144,8 +149,9 @@ const ClearForm = ()=>{
                     <Form.Select
                             label="Used Location"
                             options={locations}
-                            // required
+                            required
                             onChange={ (action, e)=>setSelectedLocation(e.value)}
+                            error={!!locationError}
                     />
 
                     
