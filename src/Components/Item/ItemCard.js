@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom';
 import {  Button, Card,  Image, Label} from 'semantic-ui-react';
-import CreateConsumption from '../Consumption/CreateConsumption';
 import ItemLogsModal from './ItemLogsModa';
 
 
 function ItemCard(props) {
-    const {item_name,erp_code,stocks} = props.item
+    const {item_name,stocks} = props.item
 
     const [modalOpen, setModalOpen] = useState(true)
 

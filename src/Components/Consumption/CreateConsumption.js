@@ -2,7 +2,7 @@
 import axios from 'axios'
 import React, { useEffect,useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Container, Form, Input, Label, Message, Modal } from 'semantic-ui-react'
+import { Button, Container, Form, Input, Label, Message } from 'semantic-ui-react'
 
 export default function CreateConsumption(props) {
 
@@ -102,10 +102,11 @@ const sendFormValuesToDb = async(values) =>{
             setFormError('')
         }
     } catch (error) {
-        console.log(error.response)
+        console.log(error)
         if(error.response.status === 422) {
             setFormLoading(false)
             setFormError(error.response.data.message)
+            setFormSuccess('')
         }
 
     }
@@ -115,7 +116,7 @@ const sendFormValuesToDb = async(values) =>{
 
 const ClearForm = ()=>{
     setConsumptionDate('')
-    setLocations('')
+    setSelectedLocation('')
     setQty('')
 }
 
@@ -138,7 +139,8 @@ const ClearForm = ()=>{
                         placeholder="date" type="date" 
                         onChange={ (action,e)=>setConsumptionDate(e.value)}
                         // required
-                        date={consumptionDate}
+                        value={consumptionDate}
+                     
                         // error={{ content: 'Please enter your first name', pointing: 'below' }}
                         />
                 </Form.Field>
@@ -152,6 +154,7 @@ const ClearForm = ()=>{
                             required
                             onChange={ (action, e)=>setSelectedLocation(e.value)}
                             error={!!locationError}
+                            value={selectedLocation}
                     />
 
                     
