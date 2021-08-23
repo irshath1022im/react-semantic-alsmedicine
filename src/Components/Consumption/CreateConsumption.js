@@ -96,10 +96,15 @@ const sendFormValuesToDb = async(values) =>{
     
         // console.log(response)
         if(response.status === 201) {
-            setFormSuccess('Request is added!!')
+        
             setFormLoading(false)
             ClearForm()
             setFormError('')
+            setFormSuccess('Request is added!!') 
+
+            setTimeout(() => {
+                setFormSuccess('') 
+            }, 3000);
         }
     } catch (error) {
         console.log(error)
