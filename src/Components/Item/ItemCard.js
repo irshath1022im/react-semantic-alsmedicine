@@ -16,7 +16,10 @@ function ItemCard(props) {
                 />
             <Card.Content>
         
-            <Card.Header><span style={{ textTransform: 'uppercase'}}>{item_name}</span></Card.Header>
+            <Card.Header>
+                <span style={{ textTransform: 'uppercase'}}>{item_name}</span>
+                   
+            </Card.Header>
 
                 {
                     stocks.length > 0 ?
@@ -25,7 +28,10 @@ function ItemCard(props) {
                             return(
 
                                         <div key={key}>
-                                            <Label as='a' color={`${key === 0 ? 'green' : 'orange'}`} ribbon>
+                                             <Label color='red'>
+                    22
+                    </Label>
+                                            {/* <Label as='a' color={`${key === 0 ? 'green' : 'orange'}`} ribbon>
                                                     {stock.batch_number}  /
                                                 <Label circular color="red">{stock.inStock}pcs</Label>
                                                 <Label circular color="red" >{stock.expiry_date}</Label>
@@ -37,14 +43,30 @@ function ItemCard(props) {
                                                     <Button size="small" onClick={ ()=> props.history.push('/consumption/create', {...stock})}><Icon name="cart" color="red" /></Button>
 
                                                 
-                                            </Label>
+                                            </Label> */}
+                                         <Label>
+                                            Batch Number
+                                            <Label.Detail>214</Label.Detail>
+                                        </Label>
+
+                                        <Label>
+                                           ERP:
+                                            <Label.Detail>214</Label.Detail>
+                                        </Label>
+
+                                        <Label>
+                                           Expiry Date:
+                                            <Label.Detail>2020-08-26</Label.Detail>
+                                        </Label>
+                                        <Label>
+                                           IN Stock:
+                                            <Label.Detail>45</Label.Detail>
+                                        </Label>
                                         </div>
 
                             )
                         })
                 
-                                
-
                     :
 
                     <div>
@@ -58,17 +80,7 @@ function ItemCard(props) {
                     
               <Card.Description extras="true">
 
-                 
-                    {/* <Label 
-                        as="a" 
-                        color="teal" 
-                        
-                        onClick={()=>props.history.push('/items/10')}
-                        >Logs
-                    </Label> */}
-
-                    
-        
+              
                     
               </Card.Description>
 

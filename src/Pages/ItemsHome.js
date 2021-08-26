@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { Card, Container, Icon, Message, Pagination } from 'semantic-ui-react'
+import { Card, Container,  Icon,  Message, Pagination, } from 'semantic-ui-react'
 import ItemCard from '../Components/Item/ItemCard'
 import SearchItem from '../Components/Shared/SearchItem'
 
@@ -13,15 +13,16 @@ export default class ItemsHome extends React.Component {
             items:[],
             meta:{},
             links:{},
-            msg:'Sending Request'
+            msg:'Sending Request',
         }
     }
 
 
 componentDidMount (){
-
+    const{activeMenu} = this.state
     let url = `${process.env.REACT_APP_API_SERVER}/items`
-    this.getItems(url)
+
+        this.getItems(url)
 
 }
 
@@ -36,12 +37,13 @@ getItems = async(url)=>{
   
     try {
         const result = await axios.get(url)
+        const response = await result.data
 
         this.setState({
             loading: false,
-            items: result.data.data,
-            meta:result.data.meta,
-            links:result.data.links
+            items: response.data,
+            meta:response.meta,
+            links:response.links
         })
     } catch (error) {
        
@@ -60,14 +62,12 @@ getItems = async(url)=>{
 }
 }
 
-updateSearchResult = (result)=>{
 
-    // console.log(result)
+onSearchResultSelect = (details) =>{
 
-    this.setState({
-        loading: false,
-        items: result.data,
-    })
+    // console.log(details)
+    let url = `${process.env.REACT_APP_API_SERVER}/items?item_name=${details.title}`
+    this.getItems(url)
 }
 
 
@@ -76,48 +76,51 @@ updateSearchResult = (result)=>{
         const {loading,items,meta,links,msg} = this.state
             return (
                 <Container>
-                    <SearchItem  updateSearchResult = {this.updateSearchResult}/>
-
-                  
+                    <hr />
+                    <SearchItem  
+                        // updateSearchResult = {this.updateSearchResult} 
+                        onSearchResultSelect={this.onSearchResultSelect}  
+                        resetSearchValue={ ()=>this.getItems(meta.path)}
+                    />
 
                     {
-                        !loading ?
+                      
+                            !loading ?
 
-                            items.length > 0 &&
-                            <div>
-                                <Card.Group> 
-                                {
-                                    items.map( item => {
-                                        return(
-                                            <ItemCard key={item.id} item={item}/>
-                                        )
-                                    })
-                                }
-                                </Card.Group>
+                                items.length > 0 &&
+                                <div>
+                                    <Card.Group> 
+                                    {
+                                        items.map( item => {
+                                            return(
+                                                <ItemCard key={item.id} item={item}/>
+                                            )
+                                        })
+                                    }
+                                    </Card.Group>
 
-                                <Pagination 
-                                // defaultActivePage={15}
-                                activePage={meta.current_page}
-                                ellipsisItem={null}
-                                firstItem={{content: <Icon name='angle double left' />, icon: true , onClick: ()=>this.getItems(links.first)}}
-                                lastItem={{ content:<Icon name='angle double right' />, icon : true, onClick: ()=>this.getItems(links.last)}}
-                                prevItem={{content: <Icon name='angle left' />, icon: true , onClick: ()=>this.getItems(links.prev)}}
-                                nextItem= {{content: <Icon name='angle right' />, icon: true , onClick: ()=>this.getItems(links.next)}}
-                                totalPages={meta.last_page}
-                                onPageChange={ (event,data)=>this.getItems(`${meta.path}?page=${data.activePage}`)}
-                                />
+                                    <Pagination 
+                                    // defaultActivePage={15}
+                                    activePage={meta.current_page}
+                                    ellipsisItem={null}
+                                    firstItem={{content: <Icon name='angle double left' />, icon: true , onClick: ()=>this.getItems(links.first)}}
+                                    lastItem={{ content:<Icon name='angle double right' />, icon : true, onClick: ()=>this.getItems(links.last)}}
+                                    prevItem={{content: <Icon name='angle left' />, icon: true , onClick: ()=>this.getItems(links.prev)}}
+                                    nextItem= {{content: <Icon name='angle right' />, icon: true , onClick: ()=>this.getItems(links.next)}}
+                                    totalPages={meta.last_page}
+                                    onPageChange={ (event,data)=>this.getItems(`${meta.path}?page=${data.activePage}`)}
+                                    />
 
 
-                            </div>
-                        :
-                        <Message info>
-                            <Message.Header>{msg}</Message.Header>
-                        </Message>
+                                </div>
+                            :
+
+                            <Message info>
+                                <Message.Header>{msg}</Message.Header>
+                            </Message>
                     
-                    }
-                   
-                
-
+                        
+                }
                    
 
                

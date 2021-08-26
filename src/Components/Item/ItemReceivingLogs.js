@@ -81,7 +81,6 @@ async componentDidMount () {
 
                                 <Message info>
                                     <Message.Header>Sorr!, No Receivings are found...</Message.Header>
-                                    <p>Visit Home Page Click <Link to="/">Here</Link></p>
                                 </Message>
                           
                             

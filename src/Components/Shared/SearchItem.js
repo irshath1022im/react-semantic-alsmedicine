@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, Label, Search } from 'semantic-ui-react'
+import {  Button, Grid, Label, Search } from 'semantic-ui-react'
 
 export default function SearchItem(props) {
 
@@ -13,18 +13,20 @@ export default function SearchItem(props) {
 const startSearch = (data) =>{
     setLoading(true)
     setValue(data.value)
+   
 }
 
 
 const getSearchValue = async () =>{
     try {
-        let result = await axios.get(`${process.env.REACT_APP_API_SERVER}/items?item_name=${value}`)
+        let result = await axios.get(`${process.env.REACT_APP_API_SERVER}/itemSearch?itemName=${value}`)
         let response = await result.data
 
         // console.log(response)
             setLoading(false)
             setResult(response.data)
-        props.updateSearchResult(response)
+
+        // props.updateSearchResult(response)
         
 
     } catch (error) {
@@ -33,18 +35,18 @@ const getSearchValue = async () =>{
 }
 
 useEffect( ()=> {
-       
-   
-        getSearchValue()
-       
-            // setResult([...result, data])
-            // setLoading(true)
-  
-   
+
+    if(value !== null) {
+            getSearchValue() 
+    }
 }, [value])
 
 
+const searchReset = () =>{
 
+    setValue('');
+    props.resetSearchValue()
+}
 
 
     return (
@@ -54,13 +56,19 @@ useEffect( ()=> {
                     size={'large'}
                     input={ { icon:'search', iconPosition: 'left'}}
                     loading= {loading}
-                    // onResultSelect={ (data,event) =>props.updateSearchResult(event.result)}
-                    onSearchChange={ (e,data)=>startSearch(data)}
+                    onResultSelect={ (data,event) =>props.onSearchResultSelect(event.result)}
+                    onSearchChange={ (event,data)=>startSearch(data)}
+                    // onFocus={ (e,data)=>startSearch(data)}
                     results={result}
                     value={value}
-                    resultRenderer={ ({item_name})=> <Label content={item_name} />}
+                    resultRenderer={ ({title})=> <Label content={title} />}
+                    minCharacters={1}
                     
                 />
+               
+                <Button size="tiny"
+                 onClick={ searchReset} disabled={ value == '' || value === null} >Reset</Button>
+            
 
                
             </Grid.Column>
