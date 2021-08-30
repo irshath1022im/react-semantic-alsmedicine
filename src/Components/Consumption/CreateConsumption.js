@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useEffect,useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Container, Form, Input, Label, Message } from 'semantic-ui-react'
+import SearchItem from '../Shared/SearchItem'
 
 export default function CreateConsumption(props) {
 
@@ -15,6 +16,14 @@ export default function CreateConsumption(props) {
     const [formError, setFormError] = useState('')
     const [formSuccess, setFormSuccess] = useState('')
     const [qtyError, setQtyError] = useState('')
+    const [searchBar, setSearchBar] = useState(false)
+    const [item_id, setItem_id] = useState('')
+    const [batch_numbers, setBatchNumbers] = useState([])  //for form select option 
+    const [batch_number_id, setBatch_number_id] = useState('')
+    const [item_name, setItemName] = useState('')
+    const [inStock, setInStock] = useState(0)
+    const [selectedBatchNumberId, setSelectedBatchNumberId] = useState([])
+    const [selectedItem, setSelectedItem] = useState({})   // this should be updated by api request and props from itemcard
    
 
 
@@ -48,14 +57,61 @@ useEffect( ()=>{
 
     getLocation()
 
+    if(props.location.state){
+        const {id,item_name,stocks} = props.location.state.item
+        const {selectedBatchNumberId,inStock} = props.location.state
+
+        let batchNumberOptions=[{key:0,value:0, text:'select'}]
+            
+        stocks.forEach((element,key) => {
+            batchNumberOptions.push(
+                    {
+                     key: key+1,
+                     value: element.batch_number_id,
+                     text:  element.batch_number
+                    })
+            
+        });
+
+        setBatchNumbers(batchNumberOptions)
+        setItem_id(id)
+        setBatch_number_id(selectedBatchNumberId)
+        setItemName(item_name)
+        setInStock(inStock)
+        setSelectedItem(props.item)
+        // setBatchNumber(batch_number)
+
+    }
+
 },[])
+
+
+const handleBatchNumberSelection = (e) =>{
+
+
+    setBatch_number_id(e.value)
+
+    //get the inStock value from previous api request and update the value inStock
+
+    if(e.value !== 0) {
+
+        let selectedBatchNumberInStock = selectedItem.batch_numbers.filter( item => {
+            return item.batch_number_id === e.value
+        })
+
+    setInStock(selectedBatchNumberInStock[0].inStock)
+
+    } else {
+        setInStock(0)
+    }
+
+}
 
 
 const formHandle = (e,data)=>{
     // console.log(data)
     setFormLoading(true)
 
-    const {inStock, batch_number_id,item_id} = props.location.state
 
 //   console.log(inStock)
 
@@ -83,7 +139,7 @@ const formHandle = (e,data)=>{
     }
    
 
-  
+
 }
 
 const sendFormValuesToDb = async(values) =>{
@@ -123,61 +179,152 @@ const ClearForm = ()=>{
     setConsumptionDate('')
     setSelectedLocation('')
     setQty('')
+    setInStock(0)
+    setItemName('')
+    setBatch_number_id(0)
 }
 
-    return (
+const onSearchResultSelect = async (values) =>{
+    // console.log(value)
+    ClearForm()
+    try {
+        let url = `${process.env.REACT_APP_API_SERVER}/items/${values.id}`
+        const result = await axios.get(url)
+        const response = await result.data
+    
+        console.log(response)
+        const {item_id, item_name, batch_numbers} = response.data
+
+        setItem_id(item_id)
+        setItemName(item_name)
+        setSelectedItem(response.data)
+
+        if(batch_numbers.length > 0) {
+
+            let batchNumberOptions=[{key:0,value:0, text:'select'}]
+            
+            batch_numbers.forEach((element,key) => {
+                batchNumberOptions.push(
+                        {
+                         key: key+1,
+                         value: element.batch_number_id,
+                         text:  element.batch_number
+                        })
+                
+            });
+
+            setBatchNumbers(batchNumberOptions)
+           
+        }
+
+
+    } catch (error) {
+        
+    }
+
+}
+
+
+return (
 
       
 
         <Container>
             <h5>Create Consumption</h5>
             <hr/>
+
+            {
+                searchBar &&
+                <>
+                <SearchItem 
+                    onSearchResultSelect={onSearchResultSelect}  
+                />
+                <hr />
+                </>
+            }
+
+            <Button
+                onClick={ ()=>setSearchBar(!searchBar)}
+            >Search Item</Button>
+            
             <Form
                 error={!!formError}
                 success={!!formSuccess}
                 loading={isFormLoading}
                 onSubmit={formHandle}
             >
-                <Form.Field>
-                    <Label>Date</Label>
-                    <Form.Input 
-                        placeholder="date" type="date" 
-                        onChange={ (action,e)=>setConsumptionDate(e.value)}
-                        // required
-                        value={consumptionDate}
-                     
-                        // error={{ content: 'Please enter your first name', pointing: 'below' }}
-                        />
-                </Form.Field>
 
+            <Form.Group>
 
-                <Form.Group>
-    
+                <Form.Field 
+                    control={Input}
+                    label="Item"
+                    value={item_name}
+                    required
+                />
+
                     <Form.Select
-                            label="Used Location"
-                            options={locations}
+                            label="Batch Numbers"
+                            options={batch_numbers}
                             required
-                            onChange={ (action, e)=>setSelectedLocation(e.value)}
-                            error={!!locationError}
-                            value={selectedLocation}
+                            onChange={ (action, e)=> handleBatchNumberSelection(e)}
+                            value={batch_number_id}
                     />
 
-                    
+                    <Label basic color={inStock >= 1 ? 'green' : 'red'}>Available Pcs : <br/><span>{inStock}</span></Label>
 
-                    <Form.Field 
-                        control={Input}
-                        label="Qty"
-                        placeholder="Qty"
-                        type={"Number"}
-                        required
-                        onChange={ (action, e)=>setQty( e.value)}
-                        // error={!!qtyError}
-                        value={qty}
-                        error={ !!qtyError && {content: qtyError , pointing: 'below'} }                    
-                     
-                    />
 
-                </Form.Group>
+            </Form.Group>
+
+
+
+                  {
+                      inStock > 1 ?
+                  
+
+                            <Form.Group>
+
+                                
+                                    <Form.Field
+                                        control={Input}
+                                        type="date"
+                                        label="Date"
+                                        required
+                                        onChange={ (action,e)=>setConsumptionDate(e.value)}
+                                        value={consumptionDate}
+                                    />
+                                    
+                        
+                                        <Form.Select
+                                                label="Used Location"
+                                                options={locations}
+                                                required
+                                                onChange={ (action, e)=>setSelectedLocation(e.value)}
+                                                error={!!locationError}
+                                                value={selectedLocation}
+                                        />
+
+                                        
+
+                                        <Form.Field 
+                                            control={Input}
+                                            label="Qty"
+                                            placeholder="Qty"
+                                            type={"Number"}
+                                            required
+                                            onChange={ (action, e)=>setQty( e.value)}
+                                            // error={!!qtyError}
+                                            value={qty}
+                                            error={ !!qtyError && {content: qtyError , pointing: 'below'} }                    
+                                        
+                                        />
+
+                            </Form.Group>
+                        :
+
+                        <Message warning>Sorry!, No Quatity is available for selected Items</Message>
+
+                  }
 
                 <Message
                     error

@@ -5,7 +5,7 @@ import ItemLogsModal from './ItemLogsModa';
 
 
 function ItemCard(props) {
-    const {item_name,stocks} = props.item
+    const {item_name,stocks,erp_code} = props.item
 
 
 
@@ -28,10 +28,15 @@ function ItemCard(props) {
                             return(
 
                                         <div key={key}>
-                                             <Label color='red'>
-                    22
-                    </Label>
-                                            {/* <Label as='a' color={`${key === 0 ? 'green' : 'orange'}`} ribbon>
+                                            {/* <Label={{ as: 'a', color: 'red', corner: 'right', icon: 'save' }}> */}
+                                            <Label corner ='right'  size="big" >
+                                                  
+
+                                                  <Label as='a' color="red" tag>#{erp_code}</Label>  
+                                                  
+                                            </Label>
+                                            
+                                            <Label as='a' color={`${key === 0 ? 'green' : 'orange'}`} ribbon>
                                                     {stock.batch_number}  /
                                                 <Label circular color="red">{stock.inStock}pcs</Label>
                                                 <Label circular color="red" >{stock.expiry_date}</Label>
@@ -40,11 +45,16 @@ function ItemCard(props) {
 
 
                                              
-                                                    <Button size="small" onClick={ ()=> props.history.push('/consumption/create', {...stock})}><Icon name="cart" color="red" /></Button>
+                                                    <Button size="small" 
+                                                    onClick={ ()=> props.history.push('/consumptions/create', {
+                                                        selectedBatchNumberId:stock.batch_number_id,
+                                                        inStock:stock.inStock,
+                                                        item:props.item
+                                                        })}><Icon name="cart" color="red" /></Button>
 
                                                 
-                                            </Label> */}
-                                         <Label>
+                                            </Label>
+                                         {/* <Label>
                                             Batch Number
                                             <Label.Detail>214</Label.Detail>
                                         </Label>
@@ -61,7 +71,7 @@ function ItemCard(props) {
                                         <Label>
                                            IN Stock:
                                             <Label.Detail>45</Label.Detail>
-                                        </Label>
+                                        </Label> */}
                                         </div>
 
                             )

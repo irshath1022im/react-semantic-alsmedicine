@@ -66,8 +66,13 @@ const searchReset = () =>{
                     
                 />
                
+               {
+                   props.reset && 
+               
                 <Button size="tiny"
                  onClick={ searchReset} disabled={ value == '' || value === null} >Reset</Button>
+
+               }
             
 
                

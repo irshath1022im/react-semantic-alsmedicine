@@ -18,8 +18,8 @@ function App() {
             <Switch>
               <Route path="/" exact component={ItemsHome} />
               <Route path="/receivings" component={Receivings} />
-              <Route path="/consumptions" component={Consumptions} />
-              <Route path="/consumption/create" exact component={CreateConsumption} />
+              <Route path="/consumptions" exact component={Consumptions} />
+              <Route path="/consumptions/create" exact component={CreateConsumption} />
             </Switch>
         </BrowserRouter>
 
