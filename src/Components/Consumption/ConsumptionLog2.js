@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
 export default function ConsumptionLog2({log}) {
-    const {date,item_name,batch_number,qty,location} = log
+    const {date,item_name,batch_number,qty,location,erp_code} = log
     return (
         
         
@@ -11,6 +11,7 @@ export default function ConsumptionLog2({log}) {
                  
                                 <Grid.Column >{date}</Grid.Column>
                                 <Grid.Column >{item_name}</Grid.Column>
+                                <Grid.Column >{erp_code}</Grid.Column>
                                 <Grid.Column >{batch_number}</Grid.Column>
                                 <Grid.Column >{location}</Grid.Column>
                                 <Grid.Column >{qty}</Grid.Column>

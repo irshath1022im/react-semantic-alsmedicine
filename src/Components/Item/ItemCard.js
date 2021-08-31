@@ -5,7 +5,7 @@ import ItemLogsModal from './ItemLogsModa';
 
 
 function ItemCard(props) {
-    const {item_name,stocks,erp_code} = props.item
+    const {item_name,batch_numbers,erp_code} = props.item
 
 
 
@@ -22,9 +22,10 @@ function ItemCard(props) {
             </Card.Header>
 
                 {
-                    stocks.length > 0 ?
+                    batch_numbers.length > 0 ?
 
-                        stocks.map( (stock,key)=>{
+                        batch_numbers.map( (stock,key)=>{
+                            const {batch_number,batch_number_id, inStock,expiry_date} = stock
                             return(
 
                                         <div key={key}>
@@ -37,18 +38,18 @@ function ItemCard(props) {
                                             </Label>
                                             
                                             <Label as='a' color={`${key === 0 ? 'green' : 'orange'}`} ribbon>
-                                                    {stock.batch_number}  /
-                                                <Label circular color="red">{stock.inStock}pcs</Label>
-                                                <Label circular color="red" >{stock.expiry_date}</Label>
+                                                    {batch_number}  /
+                                                <Label circular color="red">{inStock}pcs</Label>
+                                                <Label circular color="red" >{expiry_date}</Label>
 
-                                                <ItemLogsModal batch_number_id={stock.batch_number_id}  />
+                                                <ItemLogsModal batch_number_id={batch_number_id}  />
 
 
                                              
                                                     <Button size="small" 
                                                     onClick={ ()=> props.history.push('/consumptions/create', {
-                                                        selectedBatchNumberId:stock.batch_number_id,
-                                                        inStock:stock.inStock,
+                                                        selectedBatchNumberId:batch_number_id,
+                                                        inStock:inStock,
                                                         item:props.item
                                                         })}><Icon name="cart" color="red" /></Button>
 

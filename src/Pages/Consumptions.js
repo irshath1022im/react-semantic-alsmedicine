@@ -93,12 +93,13 @@ const onSearchResultSelect = (searchResult) =>{
                      
                             consumptions.length > 0 ?
                                 <Segment color='purple' padded >
-                                    <Grid divided columns={5}>
+                                    <Grid divided columns={6}>
                                   
                                         <Grid.Row color="teal">
 
                                             <Grid.Column >Date</Grid.Column>
                                             <Grid.Column >Items</Grid.Column>
+                                            <Grid.Column >ERP#</Grid.Column>
                                             <Grid.Column >BNumber</Grid.Column>
                                             <Grid.Column >Location</Grid.Column>
                                             <Grid.Column >Qty</Grid.Column>
