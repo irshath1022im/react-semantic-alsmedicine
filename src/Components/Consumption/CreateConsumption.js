@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import React, { useEffect,useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Button, Container, Form, Input, Label, Message } from 'semantic-ui-react'
 import SearchItem from '../Shared/SearchItem'
@@ -26,6 +27,7 @@ export default function CreateConsumption(props) {
     const [selectedItem, setSelectedItem] = useState({})   // this should be updated by api request and props from itemcard
    
 
+    const logginStatus = useSelector(state => state.Authentication.loggedIn)
 
 
 
@@ -83,6 +85,14 @@ useEffect( ()=>{
     }
 
 },[])
+
+useEffect(() => {
+    if(!logginStatus)
+    {
+        props.history.push('/login')
+    }
+  
+}, [logginStatus])
 
 
 const handleBatchNumberSelection = (e) =>{

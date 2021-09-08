@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
-import { Card, Container,  Icon,  Message, Pagination, } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
+import { Button, Card, Container,  Icon,  Message, Pagination, } from 'semantic-ui-react'
 import ItemCard from '../Components/Item/ItemCard'
 import SearchItem from '../Components/Shared/SearchItem'
 
@@ -82,6 +83,11 @@ onSearchResultSelect = (details) =>{
                         onSearchResultSelect={this.onSearchResultSelect}  
                         resetSearchValue={ ()=>this.getItems(meta.path)}
                     />
+
+                    <Button 
+                        color="instagram"
+                        as={NavLink} exact to="/items/create"
+                        >New Item</Button>
 
                     {
                       

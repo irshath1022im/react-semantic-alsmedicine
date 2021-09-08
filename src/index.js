@@ -4,10 +4,32 @@ import 'semantic-ui-css/semantic.min.css'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { applyMiddleware, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import { reducers } from './Redux/reduxStore';
+
+
+
+
+
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)))
+
+
+// const checkPageRequireAuth = store => next => action => {
+
+//     if(action.type. == 'auth_required')
+
+// }
 
 ReactDOM.render(
-  <React.StrictMode>
+
+ <React.StrictMode>
+   <Provider store={store}>
     <App />
+
+   </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
