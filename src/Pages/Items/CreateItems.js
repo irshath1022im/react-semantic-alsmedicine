@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Button, Container, Dimmer, Dropdown, Form, Loader, Segment, SegmentGroup } from 'semantic-ui-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Container, Dimmer, Dropdown, Form, Loader, Message, Segment, SegmentGroup } from 'semantic-ui-react'
+import { addItem } from '../../Redux/Actions/ItemAction'
 
 function CreateItems(props) {
+    
+        const itemStore = useSelector( state => state.item)
+            
 
         const [categories, setCategory] = useState([])
 
-        const [itemName, setItemName] = useState('')
-        const [erpCode, setErpCode] = useState('')
-        const [barCode, setBarCode] = useState('')
-        const [remark, setRemark] = useState('')
-        const [dimmerActive, setDimmerActive] = useState(false)
-        const [selectedCategory, setselectedCategory] = useState(0)
+        const [itemName, setItemName] = useState(!itemStore.items.name && '')
+        const [erpCode, setErpCode] = useState(!itemStore.items.erp_code && '')
+        const [barCode, setBarCode] = useState(!itemStore.items.bar_code && '')
+        const [remark, setRemark] = useState(!itemStore.items.remark && '' )
+        const [selectedCategory, setselectedCategory] = useState(!itemStore.items.category_id && '')
 
         const loginStatus = useSelector(state => state.Authentication.loggedIn)
         const categoryStore  = useSelector(state => state.categories)
+        const dispatch = useDispatch();
 
 
 useEffect( () => {
-    // console.log(props)
+    console.log('useEffect')
     // props.dispatch( () =>{
     //     type: 'CHECK_AUTH_STATUS'
     // })
@@ -29,12 +33,12 @@ useEffect( () => {
         props.history.push('/login')
     }
 
-}, [loginStatus])
+}, [loginStatus, itemStore])
 
 
 useEffect(() => {
     
-    let category=[{key:0, value:0, text:"Select" }]
+    let category=[{key:'', value:'', text:"Select" }]
     categoryStore.forEach((el,key) => {
        category.push({key: key+1, value:el.id, text:el.category })
     });
@@ -45,22 +49,56 @@ useEffect(() => {
 
 const formHandle = () => {
    
-    setDimmerActive(true)
+    // setDimmerActive(true)
 
-    setTimeout( ()=>{ setDimmerActive(false)}, 500)
+    let submitedData = {
+        name: itemName,
+        thumbnail: '',
+        category_id: selectedCategory,
+        erp_code: erpCode,
+        remark: remark,
+        bar_code: barCode
+    }
+
+    dispatch( addItem(submitedData))
+    
+    if(itemStore.message === 'Created'){
+        formClear();
+            // props.history.push('/items/create')
+
+           
+    }
 
 }
+
+const formClear = () => {
+    setItemName('',)
+    setErpCode('')
+    setselectedCategory('')
+    setBarCode('')
+    setRemark('')
+}
+
+
         return (
                     <Container>
                        <SegmentGroup>
             
                            <Segment>
-                           <h4>Create New Item</h4>
+                            <h4>Create New Item</h4>
             
                            </Segment>
 
-                           <Dimmer active={dimmerActive} inverted>
-                                <Loader size="mini">Loading</Loader>
+                           {
+                               itemStore.message !== '' &&
+
+                                <Segment>
+                                    <Message info>{itemStore.message}</Message>
+                                </Segment>
+                           }
+
+                           <Dimmer active={itemStore.loading} inverted>
+                                <Loader size="mini">{itemStore.message}</Loader>
                             </Dimmer>
                             
                             
@@ -73,7 +111,7 @@ const formHandle = () => {
                                                     placeholder="Item Name"
                                                     value={itemName}
                                                     onChange={ (e)=>setItemName(e.target.value)}
-                                                    required
+                                                    // required
                                                     
                                                 />
 
