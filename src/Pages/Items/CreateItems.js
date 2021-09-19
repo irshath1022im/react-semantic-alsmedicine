@@ -64,7 +64,7 @@ const formHandle = () => {
     
     if(itemStore.message === 'Created'){
         formClear();
-            // props.history.push('/items/create')
+            props.history.push('/items')
 
            
     }

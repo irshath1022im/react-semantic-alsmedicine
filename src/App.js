@@ -8,6 +8,7 @@ import NavigationMenu from './Components/Shared/NavigationMenu';
 import Consumptions from './Pages/Consumptions';
 import CreateItems from './Pages/Items/CreateItems';
 import Login from './Pages/Auth/Login';
+import ShowItem from './Pages/Items/ShowItem';
 
 function App() {
 
@@ -20,7 +21,8 @@ function App() {
             <Switch>
               <Route path="/" exact component={ItemsHome} />
               <Route path="/items" exact component={ItemsHome} />
-              <Route path="/items/create" exact component={CreateItems} />
+              <Route path="/items/create"  exact component={CreateItems} />
+              <Route path="/items/:id"  exact component={ShowItem} />
               <Route path="/receivings" component={Receivings} />
               <Route path="/consumptions" exact component={Consumptions} />
               <Route path="/consumptions/create" exact component={CreateConsumption} />

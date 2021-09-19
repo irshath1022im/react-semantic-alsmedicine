@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom';
-import {  Button, Card,  Icon,  Image, Label, Popup} from 'semantic-ui-react';
+import {  Button, Card,  Icon,  Image, Label} from 'semantic-ui-react';
 import ItemLogsModal from './ItemLogsModa';
 
 
@@ -16,10 +16,15 @@ function ItemCard(props) {
                 />
             <Card.Content>
         
-            <Card.Header>
+            
+            <Card.Header 
+                // as={NavLink} to={`/items/${props.item.id}`}
+                onClick={ ()=> props.history.push(`/items/${props.item.id}`, {...props.item})}
+            >
                 <span style={{ textTransform: 'uppercase'}}>{item_name}</span>
                    
             </Card.Header>
+           
 
                 {
                     batch_numbers.length > 0 ?

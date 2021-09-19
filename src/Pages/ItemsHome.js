@@ -86,7 +86,7 @@ onSearchResultSelect = (details) =>{
 
                     <Button 
                         color="instagram"
-                        as={NavLink} exact to="/items/create"
+                        as={NavLink} exact  to="/items/create"
                         >New Item</Button>
 
                     {
