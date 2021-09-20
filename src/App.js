@@ -13,7 +13,7 @@ import ShowItem from './Pages/Items/ShowItem';
 function App() {
 
   return (
-    <div>
+  <div>
         <Header as="h2" block textAlign="center">ALS MEDICINE</Header>
       
         <BrowserRouter>
@@ -30,7 +30,7 @@ function App() {
             </Switch>
         </BrowserRouter>
 
-    </div>
+  </div>
   );
 }
 
